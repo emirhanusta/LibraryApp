@@ -3,7 +3,6 @@ package com.mindtech.library.dto.request;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -19,7 +18,6 @@ public record BookRequest(
         BigDecimal price,
 
         @NotBlank(message = "ISBN13 is required")
-        @Pattern(regexp = "^[0-9]{13}$", message = "ISBN13 must be exactly 13 digits")
         String isbn13,
 
         @NotBlank(message = "Publisher name is required")

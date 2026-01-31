@@ -1,11 +1,13 @@
 package com.mindtech.library.service;
 
 import com.mindtech.library.dto.request.BookRequest;
+import com.mindtech.library.dto.response.BookResponse;
 import com.mindtech.library.entity.Author;
 import com.mindtech.library.entity.Book;
 import com.mindtech.library.entity.Publisher;
 import com.mindtech.library.exception.custom.DuplicateResourceException;
 import com.mindtech.library.exception.custom.ResourceNotFoundException;
+import com.mindtech.library.mapper.BookMapper;
 import com.mindtech.library.repository.AuthorRepository;
 import com.mindtech.library.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,12 +40,16 @@ class BookServiceTest {
     @Mock
     private PublisherService publisherService;
 
+    @Mock
+    private BookMapper bookMapper;
+
     @InjectMocks
     private BookService bookService;
 
     private Publisher testPublisher;
     private Book testBook;
     private BookRequest testRequest;
+    private BookResponse testResponse;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +60,7 @@ class BookServiceTest {
         this.testBook.setId(1L);
         this.testBook.setTitle("Test Book");
         this.testBook.setPrice(BigDecimal.valueOf(29.99));
-        this.testBook.setIsbn13("1234567890123");
+        this.testBook.setIsbn13("9780134685991");
         this.testBook.setPublisher(this.testPublisher);
 
         var author = new Author("Test Author", this.testBook);
@@ -64,7 +70,17 @@ class BookServiceTest {
         this.testRequest = new BookRequest(
                 "New Book",
                 BigDecimal.valueOf(39.99),
-                "9876543210123",
+                "9780134686042",
+                "Test Publisher",
+                "New Author",
+                null
+        );
+
+        this.testResponse = new BookResponse(
+                2L,
+                "New Book",
+                BigDecimal.valueOf(39.99),
+                "9780134686042",
                 "Test Publisher",
                 "New Author",
                 null
@@ -74,8 +90,12 @@ class BookServiceTest {
     @Test
     @DisplayName("Should create book successfully when ISBN does not exist")
     void shouldCreateBookSuccessfully() {
+        var newBook = new Book();
+        newBook.setTitle("New Book");
+
         when(this.bookRepository.findByIsbn13(anyString())).thenReturn(Optional.empty());
-        when(this.publisherService.findOrCreateByName(anyString())).thenReturn(this.testPublisher);
+        when(this.publisherService.findOrCreate(anyString())).thenReturn(this.testPublisher);
+        when(this.bookMapper.toEntity(any(BookRequest.class))).thenReturn(newBook);
         when(this.bookRepository.save(any(Book.class))).thenAnswer(invocation -> {
             var book = invocation.getArgument(0, Book.class);
             book.setId(2L);
@@ -86,6 +106,7 @@ class BookServiceTest {
             author.setId(2L);
             return author;
         });
+        when(this.bookMapper.toResponse(any(Book.class))).thenReturn(this.testResponse);
 
         var result = this.bookService.create(this.testRequest);
 

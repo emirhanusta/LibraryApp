@@ -3,13 +3,13 @@ package com.mindtech.library.controller;
 import com.mindtech.library.dto.request.BookRequest;
 import com.mindtech.library.dto.response.BookResponse;
 import com.mindtech.library.dto.response.GoogleBookResponse;
+import com.mindtech.library.dto.response.PagedResponse;
 import com.mindtech.library.service.BookService;
 import com.mindtech.library.service.GoogleBooksService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -46,7 +46,7 @@ public class BookController {
     @GetMapping
     @Operation(summary = "List all books")
     @NotNull
-    public ResponseEntity<Page<BookResponse>> findAll(@NotNull final Pageable pageable) {
+    public ResponseEntity<PagedResponse<BookResponse>> findAll(@NotNull final Pageable pageable) {
         return ResponseEntity.ok(this.bookService.findAll(pageable));
     }
 
@@ -95,7 +95,7 @@ public class BookController {
     @GetMapping("/published-after")
     @Operation(summary = "Find books published after a specific date using JPA query")
     @NotNull
-    public ResponseEntity<Page<BookResponse>> findBooksPublishedAfter(
+    public ResponseEntity<PagedResponse<BookResponse>> findBooksPublishedAfter(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull final LocalDate date,
             @NotNull final Pageable pageable
     ) {
