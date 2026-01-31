@@ -37,8 +37,7 @@ public class PublisherController {
     @NotNull
     public ResponseEntity<PagedResponse<PublisherWithBooksResponse>> findPublishersWithBooks(
             @RequestParam(defaultValue = "2") final int count,
-            @NotNull final Pageable pageable
-    ) {
+            @NotNull final Pageable pageable) {
         return ResponseEntity.ok(this.publisherService.findPublishersWithBooksAndAuthors(count, pageable));
     }
 }

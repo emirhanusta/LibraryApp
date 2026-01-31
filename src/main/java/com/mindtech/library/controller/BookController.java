@@ -37,8 +37,7 @@ public class BookController {
 
     public BookController(
             @NotNull final BookService bookService,
-            @NotNull final GoogleBooksService googleBooksService
-    ) {
+            @NotNull final GoogleBooksService googleBooksService) {
         this.bookService = bookService;
         this.googleBooksService = googleBooksService;
     }
@@ -70,8 +69,7 @@ public class BookController {
     @NotNull
     public ResponseEntity<BookResponse> update(
             @PathVariable @NotNull final Long id,
-            @Valid @RequestBody @NotNull final BookRequest request
-    ) {
+            @Valid @RequestBody @NotNull final BookRequest request) {
         return ResponseEntity.ok(this.bookService.update(id, request));
     }
 
@@ -87,8 +85,7 @@ public class BookController {
     @Operation(summary = "Find books by title prefix using stream")
     @NotNull
     public ResponseEntity<List<BookResponse>> findByTitlePrefix(
-            @RequestParam(defaultValue = "A") @NotNull final String prefix
-    ) {
+            @RequestParam(defaultValue = "A") @NotNull final String prefix) {
         return ResponseEntity.ok(this.bookService.findByTitleStartingWith(prefix));
     }
 
@@ -96,9 +93,8 @@ public class BookController {
     @Operation(summary = "Find books published after a specific date using JPA query")
     @NotNull
     public ResponseEntity<PagedResponse<BookResponse>> findBooksPublishedAfter(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull final LocalDate date,
-            @NotNull final Pageable pageable
-    ) {
+            @RequestParam(defaultValue = "2026-01-31") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull final LocalDate date,
+            @NotNull final Pageable pageable) {
         return ResponseEntity.ok(this.bookService.findBooksPublishedAfter(date, pageable));
     }
 

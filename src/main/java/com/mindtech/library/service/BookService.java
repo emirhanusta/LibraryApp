@@ -3,12 +3,11 @@ package com.mindtech.library.service;
 import com.mindtech.library.dto.request.BookRequest;
 import com.mindtech.library.dto.response.BookResponse;
 import com.mindtech.library.dto.response.PagedResponse;
-import com.mindtech.library.entity.Author;
 import com.mindtech.library.exception.custom.DuplicateResourceException;
 import com.mindtech.library.exception.custom.ResourceNotFoundException;
 import com.mindtech.library.mapper.BookMapper;
-import com.mindtech.library.repository.AuthorRepository;
 import com.mindtech.library.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,24 +18,13 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
     private final PublisherService publisherService;
     private final BookMapper bookMapper;
-
-    public BookService(
-            @NotNull final BookRepository bookRepository,
-            @NotNull final AuthorRepository authorRepository,
-            @NotNull final PublisherService publisherService,
-            @NotNull final BookMapper bookMapper
-    ) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.publisherService = publisherService;
-        this.bookMapper = bookMapper;
-    }
 
     @NotNull
     public PagedResponse<BookResponse> findAll(@NotNull final Pageable pageable) {
@@ -63,8 +51,8 @@ public class BookService {
 
         var savedBook = this.bookRepository.save(book);
 
-        var author = new Author(request.authorNameSurname(), savedBook);
-        this.authorRepository.save(author);
+        var author = this.authorService.create(request.authorNameSurname(), savedBook);
+
         savedBook.setAuthor(author);
 
         return this.bookMapper.toResponse(savedBook);
@@ -95,7 +83,7 @@ public class BookService {
         if (!this.bookRepository.existsById(id)) {
             throw new ResourceNotFoundException("Book not found with id: " + id);
         }
-        this.authorRepository.deleteByBookId(id);
+        this.authorService.deleteByBookId(id);
         this.bookRepository.deleteBookById(id);
     }
 

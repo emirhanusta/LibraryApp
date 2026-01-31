@@ -2,6 +2,8 @@ package com.mindtech.library.service;
 
 import com.mindtech.library.dto.response.AuthorResponse;
 import com.mindtech.library.dto.response.PagedResponse;
+import com.mindtech.library.entity.Author;
+import com.mindtech.library.entity.Book;
 import com.mindtech.library.mapper.AuthorMapper;
 import com.mindtech.library.repository.AuthorRepository;
 import org.jetbrains.annotations.NotNull;
@@ -29,5 +31,15 @@ public class AuthorService {
         var page = this.authorRepository.findAllWithBook(pageable)
                 .map(this.authorMapper::toResponse);
         return PagedResponse.from(page);
+    }
+
+    protected void deleteByBookId(@NotNull final Long id) {
+        this.authorRepository.deleteByBookId(id);
+    }
+
+    @NotNull
+    public Author create(@NotNull final String authorNameSurname, @NotNull final Book book) {
+        var author = new Author(authorNameSurname, book);
+        return this.authorRepository.save(author);
     }
 }

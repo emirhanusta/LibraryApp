@@ -22,8 +22,7 @@ public class PublisherService {
 
     public PublisherService(
             @NotNull final PublisherRepository publisherRepository,
-            @NotNull final PublisherMapper publisherMapper
-    ) {
+            @NotNull final PublisherMapper publisherMapper) {
         this.publisherRepository = publisherRepository;
         this.publisherMapper = publisherMapper;
     }
@@ -38,8 +37,7 @@ public class PublisherService {
     @NotNull
     public PagedResponse<PublisherWithBooksResponse> findPublishersWithBooksAndAuthors(
             final int count,
-            @NotNull final Pageable pageable
-    ) {
+            @NotNull final Pageable pageable) {
         var idPage = this.publisherRepository.findAllPublisherIds(Pageable.ofSize(count));
         var ids = idPage.getContent();
 

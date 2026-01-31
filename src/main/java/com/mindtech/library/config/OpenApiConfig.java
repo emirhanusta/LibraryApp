@@ -2,7 +2,6 @@ package com.mindtech.library.config;
 
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.StringSchema;
@@ -22,11 +21,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Library App API")
-                        .description("Publisher Management Prototype API")
-                        .version("1.0.0")
-                        .contact(new Contact()
-                                .name("MindTech")
-                                .email("info@mindtech.com")));
+                        .description("Publisher Management Prototype API"));
     }
 
     @Bean
