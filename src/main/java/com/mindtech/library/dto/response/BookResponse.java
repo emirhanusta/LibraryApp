@@ -2,7 +2,6 @@ package com.mindtech.library.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +14,6 @@ public record BookResponse(
         @NotNull String publisherName,
         @NotNull String authorNameSurname,
         @JsonFormat(pattern = "yyyy-MM-dd")
-        @Nullable LocalDate publicationDate
+        @NotNull LocalDate publicationDate
 ) {
 }

@@ -25,6 +25,7 @@ public record BookRequest(
         @NotBlank(message = "Author name is required")
         String authorNameSurname,
 
+        @NotNull(message = "Publication date is required")
         LocalDate publicationDate
 ) {
 }
