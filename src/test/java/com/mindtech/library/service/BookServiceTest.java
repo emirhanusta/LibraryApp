@@ -35,7 +35,7 @@ class BookServiceTest {
     private BookRepository bookRepository;
 
     @Mock
-    private AuthorRepository authorRepository;
+    private AuthorService authorService;
 
     @Mock
     private PublisherService publisherService;
@@ -101,8 +101,8 @@ class BookServiceTest {
             book.setId(2L);
             return book;
         });
-        when(this.authorRepository.save(any(Author.class))).thenAnswer(invocation -> {
-            var author = invocation.getArgument(0, Author.class);
+        when(this.authorService.create(anyString(), any(Book.class))).thenAnswer(invocation -> {
+            var author = new Author(invocation.getArgument(0, String.class), invocation.getArgument(1, Book.class));
             author.setId(2L);
             return author;
         });
@@ -114,7 +114,7 @@ class BookServiceTest {
         assertThat(result.title()).isEqualTo("New Book");
         assertThat(result.publisherName()).isEqualTo("Test Publisher");
         verify(this.bookRepository).save(any(Book.class));
-        verify(this.authorRepository).save(any(Author.class));
+        verify(this.authorService).create(anyString(), any(Book.class));
     }
 
     @Test
