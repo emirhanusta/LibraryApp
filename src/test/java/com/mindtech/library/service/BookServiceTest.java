@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +74,7 @@ class BookServiceTest {
                 "9780134686042",
                 "Test Publisher",
                 "New Author",
-                null
+                LocalDate.of(2024, 1, 1)
         );
 
         this.testResponse = new BookResponse(
@@ -83,7 +84,7 @@ class BookServiceTest {
                 "9780134686042",
                 "Test Publisher",
                 "New Author",
-                null
+                LocalDate.of(2024, 1, 1)
         );
     }
 

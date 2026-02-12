@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -61,7 +62,7 @@ class BookControllerTest {
                 "invalid",
                 "",
                 "",
-                null
+                LocalDate.of(2020, 1, 1)
         );
 
         this.mockMvc.perform(post("/api/books")
@@ -82,7 +83,7 @@ class BookControllerTest {
                 "9780132350884",
                 "Prentice Hall",
                 "Robert C. Martin",
-                null
+                LocalDate.of(2008, 8, 1)
         );
 
         var response = new BookResponse(
@@ -92,7 +93,7 @@ class BookControllerTest {
                 "9780132350884",
                 "Prentice Hall",
                 "Robert C. Martin",
-                null
+                LocalDate.of(2008, 8, 1)
         );
 
         when(this.bookService.create(any(BookRequest.class))).thenReturn(response);
