@@ -38,6 +38,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             where b.publicationDate > :date
             """)
     Page<Book> findBooksPublishedAfter(@Param("date") LocalDate date, Pageable pageable);
-
-    @NotNull List<Book> findAll();
 }
