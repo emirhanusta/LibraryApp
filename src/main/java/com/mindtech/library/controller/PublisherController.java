@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/publishers")
 @Tag(name = "Publishers", description = "Publisher management operations")
@@ -35,9 +37,8 @@ public class PublisherController {
     @GetMapping("/with-books")
     @Operation(summary = "List publishers with their books and authors")
     @NotNull
-    public ResponseEntity<PagedResponse<PublisherWithBooksResponse>> findPublishersWithBooks(
-            @RequestParam(defaultValue = "2") final int count,
-            @NotNull final Pageable pageable) {
-        return ResponseEntity.ok(this.publisherService.findPublishersWithBooksAndAuthors(count, pageable));
+    public ResponseEntity<List<PublisherWithBooksResponse>> findPublishersWithBooks(
+            @RequestParam(defaultValue = "2") final int count) {
+        return ResponseEntity.ok(this.publisherService.findPublishersWithBooksAndAuthors(count));
     }
 }

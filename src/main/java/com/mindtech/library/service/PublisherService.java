@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -39,16 +40,16 @@ public class PublisherService {
     }
 
     @NotNull
-    public PagedResponse<PublisherWithBooksResponse> findPublishersWithBooksAndAuthors(
-            final int count,
-            @NotNull final Pageable pageable) {
-        log.debug("Finding {} publishers with books and authors", count);
-        var idPage = this.publisherRepository.findAllPublisherIds(Pageable.ofSize(count));
-        var ids = idPage.getContent();
+    public List<PublisherWithBooksResponse> findPublishersWithBooksAndAuthors(final int count) {
+        log.debug("Finding first {} publishers with books and authors", count);
 
-        var page = this.publisherRepository.findPublishersWithBooksAndAuthors(ids, pageable)
-                .map(this.publisherMapper::toResponseWithBooks);
-        return PagedResponse.from(page);
+        var publisherIds = this.publisherRepository.findFirstNPublisherIds(Pageable.ofSize(count));
+
+        var publishers = this.publisherRepository.findPublishersByIdsWithBooksAndAuthors(publisherIds);
+
+        return publishers.stream()
+                .map(this.publisherMapper::toResponseWithBooks)
+                .toList();
     }
 
     @NotNull
@@ -59,7 +60,13 @@ public class PublisherService {
 
     @NotNull
     @Transactional
-    public Publisher create(@NotNull final String name) {
+    public Publisher findOrCreate(@NotNull final String name) {
+        return this.findByName(name)
+                .orElseGet(() -> this.create(name));
+    }
+
+    @NotNull
+    private Publisher create(@NotNull final String name) {
         log.info("Creating new publisher with name: {}", name);
         var publisher = new Publisher(name);
         var saved = this.publisherRepository.save(publisher);
@@ -67,10 +74,4 @@ public class PublisherService {
         return saved;
     }
 
-    @NotNull
-    @Transactional
-    public Publisher findOrCreate(@NotNull final String name) {
-        return this.findByName(name)
-                .orElseGet(() -> this.create(name));
-    }
 }
